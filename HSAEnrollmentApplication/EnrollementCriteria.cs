@@ -40,9 +40,36 @@ namespace HSAEnrollmentApplication
 
                 throw;
             }
-            
-
-
         }
+
+        ///<summary>
+        /// Checks if the applicantion effective date is within the EffectiveDateRange relative to the ApplicationSubmissionDate
+        ///</summary>
+        public bool IsInEffectiveDateRange(string dateToTakeEffect)
+        {
+            try
+            {
+                CultureInfo.DefaultThreadCurrentCulture = new CultureInfo("en-US");
+                DateTime effectivDate = DateTime.ParseExact(dateToTakeEffect, "MMddYYYY", CultureInfo.InvariantCulture);
+
+                if (ApplicationSubmissionDate.AddDays(EffectiveDateRange) >= effectivDate)
+                {
+                    return true;
+                }
+                return false;
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine("Exception thrown from IsInEffectiveDateRange method in EnrollementCriteria Class with " +
+                    "ApplicationSubmissionDate [" + ApplicationSubmissionDate + "]" +
+                    "MinAgeRequirement [" + MinAgeRequirement + "]" +
+                    "Exception [" + e + "]" +
+                    "at [" + TimeStamp + "]");
+
+                throw;
+            }
+        }
+
+
     }
 }
