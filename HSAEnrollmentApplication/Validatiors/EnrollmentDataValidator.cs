@@ -29,7 +29,7 @@ namespace HSAEnrollmentApplication
         }
 
 
-        private bool IsValidPlanType(HSAEnrollmentApplication.PlanType planType)
+        private bool IsValidPlanType(string planType)
         {
 
            return Enum.IsDefined(typeof(PlanType), planType);
