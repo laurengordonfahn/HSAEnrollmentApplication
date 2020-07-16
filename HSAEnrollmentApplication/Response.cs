@@ -5,9 +5,9 @@ namespace HSAEnrollmentApplication
 {
     public class Response
     {
-        bool Success { get; set; }
-        MemoryStream Stream { get; set; }
-        string Message { get; set; }
+        public bool Success { get; set; }
+        public MemoryStream Stream { get; set; }
+        public string Message { get; set; }
 
         public Response(bool success, string message)
         {

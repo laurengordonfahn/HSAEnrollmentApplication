@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Globalization;
 using System.IO;
+using System.Text;
 
 namespace HSAEnrollmentApplication
 {
@@ -10,6 +11,8 @@ namespace HSAEnrollmentApplication
         public bool shouldRequestProcessingDate = true;
         public string csvPath;
         public string processDate;
+        public CSVReader csvReader = new CSVReader();
+        public MemoryStream memStream;
 
         public void EnrollmentStartInteractiveConsole()
         {
@@ -57,26 +60,42 @@ namespace HSAEnrollmentApplication
                 }
                 Console.WriteLine("Thank you for starting this program.");
             }
-            
+
         }
 
         public void ReadCSV()
         {
             Console.WriteLine("The application is starting to retireve your csv file.");
-            try
+
+            csvReader.CSVPath = csvPath;
+
+            Response response = csvReader.ValidateCSVData();
+
+            if (response.Success)
             {
-                CSVReader csvReader = new CSVReader();
-                csvReader.CSVPath = csvPath;
-
-                Response response = csvReader.ReadCSVToMemoryStream();
-
-                Console.WriteLine("response in console"  + response);
-                Console.WriteLine("CSV file successfully read to memory data was valid.");
-                return;
+                Console.WriteLine(response.Message);
             }
-            catch (Exception)
+            else
             {
-                throw;
+                Console.WriteLine(response.Message);
+                Environment.Exit(0);
+            }
+        }
+
+        public void ReadCSVToMemory()
+        {
+
+            Console.WriteLine("Please wait while validated data is written to Memory for efficent processing of larger files.");
+            Response response =  csvReader.ReadCSVToMemory();
+            if (response.Success)
+            {
+                memStream = response.Stream;
+                Console.WriteLine("CSV Data has successfully been read into memory to enable efficent processing of larger files.");
+            }
+            else
+            {
+                Console.WriteLine(response.Message);
+                return;
             }
         }
     }

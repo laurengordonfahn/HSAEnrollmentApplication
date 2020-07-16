@@ -12,6 +12,8 @@ namespace HSAEnrollmentApplication
             consoleApp.EnrollmentStartInteractiveConsole();
             
             consoleApp.ReadCSV();
+
+            consoleApp.ReadCSVToMemory();
             // Test acceptance criteria and generate return collection
 
             return;
