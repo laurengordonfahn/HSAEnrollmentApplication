@@ -22,7 +22,7 @@ namespace HSAEnrollmentApplication
         {
 
             DateTime dateOutput;
-            string format = "MMddYYYY";
+            string format = "MMddyyyy";
 
             return DateTime.TryParseExact(date, format, new CultureInfo("en-US"), DateTimeStyles.None, out dateOutput);
    
