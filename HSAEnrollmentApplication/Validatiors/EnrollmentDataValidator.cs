@@ -13,26 +13,26 @@ namespace HSAEnrollmentApplication
             RuleFor(dataRow => dataRow.DOB).NotEmpty()
                 .Must(dob => IsValidDate(dob));
             RuleFor(dataRow => dataRow.PlanType).NotEmpty()
-                .Must(planType => IsValidPlanType(planType));
+                .IsEnumName(typeof(PlanType));
             RuleFor(dataRow => dataRow.EffectiveDate).NotEmpty()
-                .Must(effectiveDate => IsValidDate(effectiveDate));
+                .Must(IsValidDate);
         }
 
-        private bool IsValidDate(string date)
+        public bool IsValidDate(string date)
         {
 
             DateTime dateOutput;
             string format = "MMddyyyy";
-
+            Console.WriteLine("date", date, DateTime.TryParseExact(date, format, new CultureInfo("en-US"), DateTimeStyles.None, out dateOutput));
             return DateTime.TryParseExact(date, format, new CultureInfo("en-US"), DateTimeStyles.None, out dateOutput);
    
         }
 
 
-        private bool IsValidPlanType(string planType)
+        public bool IsValidPlanType(string planType)
         {
-
-           return Enum.IsDefined(typeof(PlanType), planType);
+            Console.WriteLine("planType", planType, Enum.IsDefined(typeof(PlanType), planType));
+            return Enum.IsDefined(typeof(PlanType), planType);
 
         }
     }

@@ -7,9 +7,11 @@ namespace HSAEnrollmentApplication
         
         static void Main(string[] args)
         {
-            //Interactive console get csv file path and processing date
-            new EnrollmentInteractiveConsole().EnrollmentStartInteractiveConsole();
-            //Read csv file and validate data return memorystream
+            EnrollmentInteractiveConsole consoleApp = new EnrollmentInteractiveConsole();
+        
+            consoleApp.EnrollmentStartInteractiveConsole();
+            
+            consoleApp.ReadCSV();
             // Test acceptance criteria and generate return collection
 
             return;

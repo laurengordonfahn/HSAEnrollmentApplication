@@ -3,8 +3,8 @@ namespace HSAEnrollmentApplication
 {
     public enum PlanType
     {
-        HSA,
-        HRA,
-        FSA
+        HSA = 1,
+        HRA = 2,
+        FSA = 3
     }
 }

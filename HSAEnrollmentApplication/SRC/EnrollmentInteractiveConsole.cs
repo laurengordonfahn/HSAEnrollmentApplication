@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Globalization;
+using System.IO;
 
 namespace HSAEnrollmentApplication
 {
@@ -7,13 +8,16 @@ namespace HSAEnrollmentApplication
     {
         public string WelcomeMsg = "Welcome to the Enrollment Application interactive console.";
         public bool shouldRequestProcessingDate = true;
+        public string csvPath;
+        public string processDate;
 
         public void EnrollmentStartInteractiveConsole()
         {
             Console.WriteLine(WelcomeMsg);
             Console.WriteLine("Please, enter the local path of the csv file you would like processed.");
 
-            string path = Console.ReadLine();
+            csvPath = Console.ReadLine();
+
 
             if (shouldRequestProcessingDate)
             {
@@ -21,7 +25,7 @@ namespace HSAEnrollmentApplication
                     "OR" +
                     "you can press return and UTC aka GMT will be used.");
 
-                string processDate = Console.ReadLine();
+                processDate = Console.ReadLine();
                 bool isDateValid = false;
 
                 while (!isDateValid)
@@ -34,8 +38,6 @@ namespace HSAEnrollmentApplication
                     {
                         DateTime dateOutput;
                         string format = "MMddyyyy";
-
-                        Console.WriteLine(processDate);
 
                         if (DateTime.TryParseExact(processDate, format, new CultureInfo("en-US"), DateTimeStyles.None, out dateOutput))
                         {
@@ -53,7 +55,28 @@ namespace HSAEnrollmentApplication
                     }
 
                 }
-                Console.WriteLine("Thank you for starting this program, the application is starting to retireve your csv file.");
+                Console.WriteLine("Thank you for starting this program.");
+            }
+            
+        }
+
+        public void ReadCSV()
+        {
+            Console.WriteLine("The application is starting to retireve your csv file.");
+            try
+            {
+                CSVReader csvReader = new CSVReader();
+                csvReader.CSVPath = csvPath;
+
+                Response response = csvReader.ReadCSVToMemoryStream();
+
+                Console.WriteLine("response in console"  + response);
+                Console.WriteLine("CSV file successfully read to memory data was valid.");
+                return;
+            }
+            catch (Exception)
+            {
+                throw;
             }
         }
     }
