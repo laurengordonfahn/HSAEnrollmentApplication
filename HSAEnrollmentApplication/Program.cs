@@ -7,20 +7,12 @@ namespace HSAEnrollmentApplication
         
         static void Main(string[] args)
         {
-            Console.WriteLine("Hello World!");
-            
+            //Interactive console get csv file path and processing date
+            new EnrollmentInteractiveConsole().EnrollmentStartInteractiveConsole();
+            //Read csv file and validate data return memorystream
+            // Test acceptance criteria and generate return collection
 
-            Console.WriteLine("At any time you can press the ESC key to exit out of the program, your processes will not complete if you exit early.");
-
-            while (!(Console.KeyAvailable && Console.ReadKey(true).Key == ConsoleKey.Escape))
-            {
-                //Interactive Console get csv file path and intial date
-                new EnrollmentInteractiveConsole().EnrollmentStartInteractiveConsole();
-
-
-                return;
-            }
-
+            return;
         }
     }
 }
