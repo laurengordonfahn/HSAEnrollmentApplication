@@ -1,5 +1,4 @@
 ﻿using System;
-using FluentValidation;
 using FluentValidation.Results;
 
 namespace HSAEnrollmentApplication
@@ -24,8 +23,9 @@ namespace HSAEnrollmentApplication
                     //validate
                     EnrollmentDataValidator validator = new EnrollmentDataValidator();
                     ValidationResult result = validator.Validate(enrollment);
+                    Console.WriteLine("result", result);
                     // read to memorystream
-                    
+                    return;
                 }
             }
             catch (Exception e)
