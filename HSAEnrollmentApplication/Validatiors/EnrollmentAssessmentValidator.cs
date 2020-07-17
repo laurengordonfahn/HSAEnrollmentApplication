@@ -9,9 +9,9 @@ namespace HSAEnrollmentApplication
         //ApplicationSubmissionDate: date given to compare submitted data against 
         public DateTime ApplicationSubmissionDate = System.DateTime.UtcNow.Date;
         // MinAgeRequirement: minimum age of applicant that is accepted
-        public int MinAgeRequirement;
+        public int MinAgeRequirement = 18;
         // EffectiveDateRange:  maxium number of days application effective date is valid
-        public int EffectiveDateRange;
+        public int EffectiveDateRange = 30;
 
         public EnrollmentAssessmentValidator()
         {

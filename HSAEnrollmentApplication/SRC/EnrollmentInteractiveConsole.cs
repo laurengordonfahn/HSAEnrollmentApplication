@@ -1,39 +1,40 @@
 ﻿using System;
+using System.Data;
 using System.Globalization;
 using System.IO;
 using System.Text;
+using HSAEnrollmentApplication.Models;
 
 namespace HSAEnrollmentApplication
 {
     public class EnrollmentInteractiveConsole
     {
         public string WelcomeMsg = "Welcome to the Enrollment Application interactive console.";
-        public bool shouldRequestProcessingDate = true;
-        public string csvPath;
-        public string processDate;
-        public CSVReader csvReader = new CSVReader();
-        public MemoryStream memStream;
+        public bool ShouldRequestProcessingDate = true;
+        public string CSVPath;
+        public string ProcessDate;
+        public DataTable Table = new ProcessedDataTable().CreateTable();
 
         public void EnrollmentStartInteractiveConsole()
         {
             Console.WriteLine(WelcomeMsg);
             Console.WriteLine("Please, enter the local path of the csv file you would like processed.");
 
-            csvPath = Console.ReadLine();
+            CSVPath = Console.ReadLine();
 
 
-            if (shouldRequestProcessingDate)
+            if (ShouldRequestProcessingDate)
             {
                 Console.WriteLine("At this time you may enter the date on which you would like this enrollment data to be processed against in mmddyyyy format " +
                     "OR" +
                     "you can press return and UTC aka GMT will be used.");
 
-                processDate = Console.ReadLine();
+                ProcessDate = Console.ReadLine();
                 bool isDateValid = false;
 
                 while (!isDateValid)
                 {
-                    if (String.IsNullOrEmpty(processDate))
+                    if (String.IsNullOrEmpty(ProcessDate))
                     {
                         isDateValid = true;
                     }
@@ -42,18 +43,18 @@ namespace HSAEnrollmentApplication
                         DateTime dateOutput;
                         string format = "MMddyyyy";
 
-                        if (DateTime.TryParseExact(processDate, format, new CultureInfo("en-US"), DateTimeStyles.None, out dateOutput))
+                        if (DateTime.TryParseExact(ProcessDate, format, new CultureInfo("en-US"), DateTimeStyles.None, out dateOutput))
                         {
-                            Console.WriteLine("dateOutput" + DateTime.TryParseExact(processDate, format, new CultureInfo("en-US"), DateTimeStyles.None, out dateOutput) + dateOutput);
+                            Console.WriteLine("dateOutput" + DateTime.TryParseExact(ProcessDate, format, new CultureInfo("en-US"), DateTimeStyles.None, out dateOutput) + dateOutput);
 
                             isDateValid = true;
                         }
                         else
                         {
-                            Console.WriteLine("dateOutput" + DateTime.TryParseExact(processDate, format, new CultureInfo("en-US"), DateTimeStyles.None, out dateOutput) + dateOutput);
+                            Console.WriteLine("dateOutput" + DateTime.TryParseExact(ProcessDate, format, new CultureInfo("en-US"), DateTimeStyles.None, out dateOutput) + dateOutput);
                             Console.WriteLine("The date you entered is either not a valid date or not in the format mmddyyyy, please try again or simple press the return/enter key to use the default GMT");
 
-                            processDate = Console.ReadLine();
+                            ProcessDate = Console.ReadLine();
                         }
                     }
 
@@ -63,13 +64,11 @@ namespace HSAEnrollmentApplication
 
         }
 
-        public void ReadCSV()
+        public DataTable ReadCSV()
         {
             Console.WriteLine("The application is starting to retireve your csv file.");
 
-            csvReader.CSVPath = csvPath;
-
-            Response response = csvReader.ValidateCSVData();
+            Response response = CSVReader.ValidateCSVData(CSVPath, Table, ProcessDate);
 
             if (response.Success)
             {
@@ -82,21 +81,10 @@ namespace HSAEnrollmentApplication
             }
         }
 
-        public void ReadCSVToMemory()
+        public DateTime CreateDataTable()
         {
 
-            Console.WriteLine("Please wait while validated data is written to Memory for efficent processing of larger files.");
-            Response response =  csvReader.ReadCSVToMemory();
-            if (response.Success)
-            {
-                memStream = response.Stream;
-                Console.WriteLine("CSV Data has successfully been read into memory to enable efficent processing of larger files.");
-            }
-            else
-            {
-                Console.WriteLine(response.Message);
-                return;
-            }
         }
+
     }
 }

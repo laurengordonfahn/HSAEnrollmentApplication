@@ -1,20 +1,30 @@
 ﻿using System;
-using System.Globalization;
 using System.IO;
-using CsvHelper;
 using FluentValidation.Results;
 using System.Text.Json;
 using System.Collections.Generic;
-using System.Text;
+using System.Data;
+using HSAEnrollmentApplication.Models;
+using System.Globalization;
 
 namespace HSAEnrollmentApplication
 {
     public class CSVReader
     {
-        public string CSVPath;
+        public string CSVPath { get; set; }
+        public DataTable Table { get; set; }
+        //ApplicationSubmissionDate: date given to compare submitted data against 
+        public DateTime ApplicationSubmissionDate { get; set; } //= System.DateTime.UtcNow.Date
+      
         public DateTime TimeStamp = DateTime.UtcNow;
-
-        //public CultureInfo CultureInvariant { get; private set; }
+        
+        public CSVReader(string csvPath, DataTable table, DateTime processDate)
+        {
+            CSVPath = csvPath;
+            Table = table;
+            ApplicationSubmissionDate = processDate;
+        }
+       
 
         public Response ValidateCSVData()
         {
@@ -30,31 +40,32 @@ namespace HSAEnrollmentApplication
                     {
                         string row = reader.ReadLine();
 
-                        
-                        string[] fields = row.Split(",");
-                        EnrollmentDataModel enrollmentRow = new EnrollmentDataModel().CreateInstanceFromList(fields);
-                        //validate
-                        EnrollmentDataValidator validator = new EnrollmentDataValidator();
-                        ValidationResult results = validator.Validate(enrollmentRow);
-                        if (!results.IsValid)
-                        {
-                            response = new Response(false, "Data failed to validate" + JsonSerializer.Serialize(results.Errors));
-                            reader.Close();
-                            return response;
+                        List<string> fields = new List<string>(row.Split(","));
 
+                        //validate initial
+                        Response result = ValidateInitialDataRow(fields);
+                        if (!result.Success)
+                        {
+                            response = new Response(false, "A record in the file failed validation.  Processing has stopped.");
+                            reader.Close();
+                            return result;
                         }
-                   
-                        
-                        
+
+                        //assessment
+                        List<string> assessedRow = ValidateEnrollmentCriteria(fields);
+
+                        //read to table
+                        WriteToDataTable(fields);
+
                     }
                     reader.Close();
                 }
-                response = new Response(true, "Validation Complete");
+                response = new Response(true, "Validation Complete successfully wrote data to table in Memory");
                 return response;
             }
             catch (Exception e)
             {
-                Console.WriteLine("Exception thrown trying to read in a csv file for validation with " +
+                Console.WriteLine("Exception thrown trying to read in a process csv data with " +
                    "CSVPath [" + CSVPath + "]" +
                    "Exception [" + e + "]" +
                    "at [" + TimeStamp + "]");
@@ -62,45 +73,86 @@ namespace HSAEnrollmentApplication
             }
         }
 
-        public Response ReadCSVToMemory()
+        public Response ValidateInitialDataRow(List<string> fields)
         {
-
             try
             {
-                Response response;
-
-
-                using (MemoryStream ms = new MemoryStream())
-                using (FileStream file = new FileStream(CSVPath, FileMode.Open, FileAccess.Read))
+                EnrollmentDataModel enrollmentRow = new EnrollmentDataModel(fields);
+                //validate
+                EnrollmentDataValidator validator = new EnrollmentDataValidator();
+                ValidationResult results = validator.Validate(enrollmentRow);
+                if (!results.IsValid)
                 {
-                    byte[] bytes = new byte[file.Length];
-                    ms.Write(bytes, 0, (int)file.Length);
-                    //MemoryStream memStream = new MemoryStream();
-                    //int i = 0;
-                    //while (!reader.EndOfStream)
-                    //{
-                    //    byte[] row = Encoding.ASCII.GetBytes(reader.ReadLine());
-                    //    Console.WriteLine("rowLenght"+ row + row.Length);
-                    //    long readerLength = reader.BaseStream.Length;
-                    //    memStream.Write(row, i, (int)readerLength);
-                    //    Console.WriteLine(memStream + memStream.Length.ToString());
-                    //    i += row.Length;
-                    //}
-                    //reader.Close();
-                    Console.WriteLine(ms + ms.Length.ToString());
-                    response = new Response(true, "Successfully wrote file to Memory", ms);
-                    return response;
-
+                    return new Response(false, "Data failed to validate" + JsonSerializer.Serialize(results.Errors));
                 }
+                return new Response(true, "Data validated");
+            }
+            catch(Exception e)
+            {
+                Console.WriteLine("Exception thrown trying to validation data row with " +
+                   "Row [" + JsonSerializer.Serialize(fields) + "]" +
+                   "CSVPath [" + CSVPath + "]" +
+                   "Exception [" + e + "]" +
+                   "at [" + TimeStamp + "]");
+                throw;
+            }
+            
+        }
+
+        public List<string> ValidateEnrollmentCriteria(List<string> fields)
+        {
+            try
+            {
+                EnrollmentDataModel enrollmentRow = new EnrollmentDataModel(fields);
+                //validate
+                EnrollmentAssessmentValidator validator = new EnrollmentAssessmentValidator();
+                ValidationResult results = validator.Validate(enrollmentRow);
+                if (!results.IsValid)
+                {
+                    fields.Add("Rejected");
+                }
+                else
+                {
+                    fields.Add("Accepted");
+                }
+                return fields;
             }
             catch (Exception e)
             {
-                Console.WriteLine("Exception thrown trying to read in a csv file to Memory with " +
+                Console.WriteLine("Exception thrown trying to assess data row with " +
+                   "Row [" + JsonSerializer.Serialize(fields) + "]" +
+                   "CSVPath [" + CSVPath + "]" +
+                   "Exception [" + e + "]" +
+                   "at [" + TimeStamp + "]");
+                throw;
+            }
+
+        }
+
+        public void WriteToDataTable(List<string> fields)
+        {
+            try
+            {
+                CultureInfo.DefaultThreadCurrentCulture = new CultureInfo("en-US");
+
+                DateTime dob = DateTime.ParseExact(fields[3], "MMddyyyy", CultureInfo.InvariantCulture);
+                DateTime effectiveDate = DateTime.ParseExact(fields[5], "MMddyyyy", CultureInfo.InvariantCulture);
+
+                string shortDOB = dob.ToShortDateString();
+                string shortEffectiveDate = effectiveDate.ToShortDateString();
+
+                Table.Rows.Add(fields[6], fields[0], fields[1], shortDOB, fields[3], fields[4], shortEffectiveDate);
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine("Exception thrown trying to write data row to table with " +
+                   "Row [" + JsonSerializer.Serialize(fields) + "]" +
                    "CSVPath [" + CSVPath + "]" +
                    "Exception [" + e + "]" +
                    "at [" + TimeStamp + "]");
                 throw;
             }
         }
+
     }
 }
