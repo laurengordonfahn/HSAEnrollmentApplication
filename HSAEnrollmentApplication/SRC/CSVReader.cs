@@ -24,13 +24,14 @@ namespace HSAEnrollmentApplication
             ApplicationSubmissionDate = processDate;
         }
 
-
+        /// <summary>
+        /// Validates each row of data
+        /// </summary
         public Response ValidateCSVData()
         {
 
             try
             {
-                Response response;
                 using (StreamReader reader = new StreamReader(File.OpenRead(CSVPath)))
                 {
 
@@ -44,10 +45,10 @@ namespace HSAEnrollmentApplication
                         Response result = ValidateInitialDataRow(fields);
                         if (!result.Success)
                         {
-                            response = new Response(false, "A record in the file failed validation.  Processing has stopped.");
+                            
                             reader.Close();
                             Table.Clear();
-                            return result;
+                            return new Response(false, "A record in the file failed validation. Processing has stopped.");
                         }
 
                         //assessment
@@ -59,12 +60,16 @@ namespace HSAEnrollmentApplication
                     }
                     reader.Close();
                 }
-                response = new Response(true, "Validation Complete successfully wrote data to table in Memory");
-                return response;
+                return new Response(true, "Validation complete, program successfully wrote data to table in memory");
+            }
+            catch (System.IO.FileNotFoundException)
+            {
+                Console.WriteLine("Your csv file path[" + CSVPath + "]was not found in the system. The program is going to exit please run the program again with a corrected file path.");
+                return new Response(false, "CSV was not found, exiting.");
             }
             catch (Exception e)
             {
-                Console.WriteLine("Exception thrown trying to read in a process csv data with " +
+                Console.WriteLine("Exception thrown trying to read and process csv data with " +
                    "CSVPath [" + CSVPath + "]" +
                    "Exception [" + e + "]" +
                    "at [" + TimeStamp + "]");
@@ -72,6 +77,9 @@ namespace HSAEnrollmentApplication
             }
         }
 
+        /// <summary>
+        /// Does intial data validation
+        /// </summary
         public Response ValidateInitialDataRow(List<string> fields)
         {
             try
@@ -98,6 +106,9 @@ namespace HSAEnrollmentApplication
 
         }
 
+        /// <summary>
+        /// Accesses valid data for Enrollment status acceptablity
+        /// </summary
         public List<string> ValidateEnrollmentCriteria(List<string> fields)
         {
             try
@@ -129,6 +140,9 @@ namespace HSAEnrollmentApplication
 
         }
 
+        /// <summary>
+        /// Writes a row of data to the data table in memory
+        /// </summary
         public void WriteToDataTable(List<string> fields)
         {
             try

@@ -14,15 +14,16 @@ namespace HSAEnrollmentApplication
         public string CSVPath;
         public DateTime ProcessDate;
         public DataTable Table = new ProcessedDataTable().AssessmentTable();
-        
 
+        /// <summary>
+        /// Prompts user for csv path and a date to process csv data against. If not process date is submitted utc is used as default.
+        /// </summary
         public void EnrollmentStartInteractiveConsole()
         {
             Console.WriteLine(WelcomeMsg);
             Console.WriteLine("Please, enter the local path of the csv file you would like processed.");
 
             CSVPath = Console.ReadLine();
-            Console.WriteLine(CSVPath);
 
             if (ShouldRequestProcessingDate)
             {
@@ -47,15 +48,12 @@ namespace HSAEnrollmentApplication
 
                         if (DateTime.TryParseExact(submittedDate, format, new CultureInfo("en-US"), DateTimeStyles.None, out dateOutput))
                         {
-                            Console.WriteLine("dateOutput" + DateTime.TryParseExact(submittedDate, format, new CultureInfo("en-US"), DateTimeStyles.None, out dateOutput) + dateOutput);
                             ProcessDate = dateOutput;
                             isDateValid = true;
                         }
                         else
                         {
-                            Console.WriteLine("dateOutput" + DateTime.TryParseExact(submittedDate, format, new CultureInfo("en-US"), DateTimeStyles.None, out dateOutput) + dateOutput);
                             Console.WriteLine("The date you entered is either not a valid date or not in the format mmddyyyy, please try again or simple press the return/enter key to use the default GMT");
-
                             submittedDate = Console.ReadLine();
                         }
                     }
@@ -66,6 +64,9 @@ namespace HSAEnrollmentApplication
 
         }
 
+        /// <summary>
+        /// Handles CSV processing and informs user of progress: Initiates CSV stream reader and validates data and access status before writing to datatable
+        /// </summary>
         public void ReadCSV()
         {
             Console.WriteLine("The application is starting to retireve your csv file.");
@@ -75,21 +76,23 @@ namespace HSAEnrollmentApplication
 
             if (response.Success)
             {
-                Console.WriteLine("Successfully validated data and assessed enrollment status!");
+                Console.WriteLine(response.Message);
             }
             else
             {
-                Console.WriteLine("A record in the file failed validation.  Processing has stopped.");
+                Console.WriteLine(response.Message);
                 Environment.Exit(0);
             }
         }
 
+        /// <summary>
+        /// Writes processed data rows to console
+        /// </summary>
         public void DisplayData()
         {
+            Console.WriteLine("Processed data displayed below:");
             foreach (DataRow dataRow in Table.Rows)
             {
-                Console.WriteLine(Table.Columns.Count);
-
                 for(int i = 0; i < Table.Columns.Count;  i++)
                 {
                     if(i == 0)
@@ -107,6 +110,7 @@ namespace HSAEnrollmentApplication
                 }
                 Console.WriteLine();
             }
+            Console.WriteLine("Program complete.");
 
         }
 
