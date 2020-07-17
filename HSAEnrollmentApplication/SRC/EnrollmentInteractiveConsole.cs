@@ -12,8 +12,9 @@ namespace HSAEnrollmentApplication
         public string WelcomeMsg = "Welcome to the Enrollment Application interactive console.";
         public bool ShouldRequestProcessingDate = true;
         public string CSVPath;
-        public string ProcessDate;
-        public DataTable Table = new ProcessedDataTable().CreateTable();
+        public DateTime ProcessDate;
+        public DataTable Table = new ProcessedDataTable().AssessmentTable();
+        
 
         public void EnrollmentStartInteractiveConsole()
         {
@@ -21,7 +22,7 @@ namespace HSAEnrollmentApplication
             Console.WriteLine("Please, enter the local path of the csv file you would like processed.");
 
             CSVPath = Console.ReadLine();
-
+            Console.WriteLine(CSVPath);
 
             if (ShouldRequestProcessingDate)
             {
@@ -29,13 +30,14 @@ namespace HSAEnrollmentApplication
                     "OR" +
                     "you can press return and UTC aka GMT will be used.");
 
-                ProcessDate = Console.ReadLine();
+                string submittedDate = Console.ReadLine();
                 bool isDateValid = false;
 
                 while (!isDateValid)
                 {
-                    if (String.IsNullOrEmpty(ProcessDate))
+                    if (String.IsNullOrEmpty(submittedDate))
                     {
+                        ProcessDate = System.DateTime.UtcNow.Date;
                         isDateValid = true;
                     }
                     else
@@ -43,18 +45,18 @@ namespace HSAEnrollmentApplication
                         DateTime dateOutput;
                         string format = "MMddyyyy";
 
-                        if (DateTime.TryParseExact(ProcessDate, format, new CultureInfo("en-US"), DateTimeStyles.None, out dateOutput))
+                        if (DateTime.TryParseExact(submittedDate, format, new CultureInfo("en-US"), DateTimeStyles.None, out dateOutput))
                         {
-                            Console.WriteLine("dateOutput" + DateTime.TryParseExact(ProcessDate, format, new CultureInfo("en-US"), DateTimeStyles.None, out dateOutput) + dateOutput);
-
+                            Console.WriteLine("dateOutput" + DateTime.TryParseExact(submittedDate, format, new CultureInfo("en-US"), DateTimeStyles.None, out dateOutput) + dateOutput);
+                            ProcessDate = dateOutput;
                             isDateValid = true;
                         }
                         else
                         {
-                            Console.WriteLine("dateOutput" + DateTime.TryParseExact(ProcessDate, format, new CultureInfo("en-US"), DateTimeStyles.None, out dateOutput) + dateOutput);
+                            Console.WriteLine("dateOutput" + DateTime.TryParseExact(submittedDate, format, new CultureInfo("en-US"), DateTimeStyles.None, out dateOutput) + dateOutput);
                             Console.WriteLine("The date you entered is either not a valid date or not in the format mmddyyyy, please try again or simple press the return/enter key to use the default GMT");
 
-                            ProcessDate = Console.ReadLine();
+                            submittedDate = Console.ReadLine();
                         }
                     }
 
@@ -64,25 +66,47 @@ namespace HSAEnrollmentApplication
 
         }
 
-        public DataTable ReadCSV()
+        public void ReadCSV()
         {
             Console.WriteLine("The application is starting to retireve your csv file.");
 
-            Response response = CSVReader.ValidateCSVData(CSVPath, Table, ProcessDate);
+            Response response = new CSVReader(CSVPath, Table, ProcessDate).ValidateCSVData();
+    
 
             if (response.Success)
             {
-                Console.WriteLine(response.Message);
+                Console.WriteLine("Successfully validated data and assessed enrollment status!");
             }
             else
             {
-                Console.WriteLine(response.Message);
+                Console.WriteLine("A record in the file failed validation.  Processing has stopped.");
                 Environment.Exit(0);
             }
         }
 
-        public DateTime CreateDataTable()
+        public void DisplayData()
         {
+            foreach (DataRow dataRow in Table.Rows)
+            {
+                Console.WriteLine(Table.Columns.Count);
+
+                for(int i = 0; i < Table.Columns.Count;  i++)
+                {
+                    if(i == 0)
+                    {
+                        Console.Write(Enum.Parse(typeof(AssessmentStatus), (dataRow.ItemArray[i]).ToString()) + " ");
+                    }
+                    else if(i == 4)
+                    {
+                        Console.Write(Enum.Parse(typeof(PlanType), (dataRow.ItemArray[i]).ToString()) + " ");
+                    }
+                    else
+                    {
+                        Console.Write(dataRow.ItemArray[i] + " ");
+                    }    
+                }
+                Console.WriteLine();
+            }
 
         }
 

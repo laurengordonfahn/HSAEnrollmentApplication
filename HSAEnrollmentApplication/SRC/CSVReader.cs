@@ -12,19 +12,18 @@ namespace HSAEnrollmentApplication
     public class CSVReader
     {
         public string CSVPath { get; set; }
-        public DataTable Table { get; set; }
+        public DataTable Table;
         //ApplicationSubmissionDate: date given to compare submitted data against 
-        public DateTime ApplicationSubmissionDate { get; set; } //= System.DateTime.UtcNow.Date
-      
+        public DateTime ApplicationSubmissionDate { get; set; }
         public DateTime TimeStamp = DateTime.UtcNow;
-        
+
         public CSVReader(string csvPath, DataTable table, DateTime processDate)
         {
             CSVPath = csvPath;
             Table = table;
             ApplicationSubmissionDate = processDate;
         }
-       
+
 
         public Response ValidateCSVData()
         {
@@ -32,10 +31,9 @@ namespace HSAEnrollmentApplication
             try
             {
                 Response response;
-                 
                 using (StreamReader reader = new StreamReader(File.OpenRead(CSVPath)))
                 {
-       
+
                     while (!reader.EndOfStream)
                     {
                         string row = reader.ReadLine();
@@ -48,6 +46,7 @@ namespace HSAEnrollmentApplication
                         {
                             response = new Response(false, "A record in the file failed validation.  Processing has stopped.");
                             reader.Close();
+                            Table.Clear();
                             return result;
                         }
 
@@ -87,7 +86,7 @@ namespace HSAEnrollmentApplication
                 }
                 return new Response(true, "Data validated");
             }
-            catch(Exception e)
+            catch (Exception e)
             {
                 Console.WriteLine("Exception thrown trying to validation data row with " +
                    "Row [" + JsonSerializer.Serialize(fields) + "]" +
@@ -96,7 +95,7 @@ namespace HSAEnrollmentApplication
                    "at [" + TimeStamp + "]");
                 throw;
             }
-            
+
         }
 
         public List<string> ValidateEnrollmentCriteria(List<string> fields)
@@ -106,6 +105,7 @@ namespace HSAEnrollmentApplication
                 EnrollmentDataModel enrollmentRow = new EnrollmentDataModel(fields);
                 //validate
                 EnrollmentAssessmentValidator validator = new EnrollmentAssessmentValidator();
+                validator.ApplicationSubmissionDate = ApplicationSubmissionDate;
                 ValidationResult results = validator.Validate(enrollmentRow);
                 if (!results.IsValid)
                 {
@@ -134,14 +134,16 @@ namespace HSAEnrollmentApplication
             try
             {
                 CultureInfo.DefaultThreadCurrentCulture = new CultureInfo("en-US");
-
-                DateTime dob = DateTime.ParseExact(fields[3], "MMddyyyy", CultureInfo.InvariantCulture);
-                DateTime effectiveDate = DateTime.ParseExact(fields[5], "MMddyyyy", CultureInfo.InvariantCulture);
+                DateTime dob = DateTime.ParseExact(fields[2], "MMddyyyy", CultureInfo.InvariantCulture);
+                DateTime effectiveDate = DateTime.ParseExact(fields[4], "MMddyyyy", CultureInfo.InvariantCulture);
 
                 string shortDOB = dob.ToShortDateString();
                 string shortEffectiveDate = effectiveDate.ToShortDateString();
+                AssessmentStatus status = (AssessmentStatus)Enum.Parse(typeof(AssessmentStatus), fields[5]);
+                PlanType plan = (PlanType)Enum.Parse(typeof(PlanType), fields[3]);
 
-                Table.Rows.Add(fields[6], fields[0], fields[1], shortDOB, fields[3], fields[4], shortEffectiveDate);
+                Table.Rows.Add(status, fields[0], fields[1], shortDOB, plan, shortEffectiveDate);
+                Table.AcceptChanges();
             }
             catch (Exception e)
             {
@@ -153,6 +155,5 @@ namespace HSAEnrollmentApplication
                 throw;
             }
         }
-
     }
 }

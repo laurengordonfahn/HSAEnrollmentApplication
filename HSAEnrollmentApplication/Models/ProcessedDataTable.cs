@@ -5,9 +5,9 @@ namespace HSAEnrollmentApplication.Models
 {
     public class ProcessedDataTable
     {
-        public DataTable CreateTable()
+        public DataTable AssessmentTable()
         {
-            DataTable table = new DataTable("EnrollmentProcessedDataTable");
+            DataTable table = new DataTable("ProcessedData");
             table.Columns.Add("Status", typeof(AssessmentStatus));
             table.Columns.Add("FirstName", typeof(string));
             table.Columns.Add("LastName", typeof(string));
@@ -16,7 +16,6 @@ namespace HSAEnrollmentApplication.Models
             table.Columns.Add("EffectiveDate", typeof(string));
 
             return table;
-
         }
     }
 }

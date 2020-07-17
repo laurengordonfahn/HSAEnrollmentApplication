@@ -7,7 +7,7 @@ namespace HSAEnrollmentApplication
     public class EnrollmentAssessmentValidator : AbstractValidator<EnrollmentDataModel>
     {
         //ApplicationSubmissionDate: date given to compare submitted data against 
-        public DateTime ApplicationSubmissionDate = System.DateTime.UtcNow.Date;
+        public DateTime ApplicationSubmissionDate;
         // MinAgeRequirement: minimum age of applicant that is accepted
         public int MinAgeRequirement = 18;
         // EffectiveDateRange:  maxium number of days application effective date is valid
@@ -27,7 +27,7 @@ namespace HSAEnrollmentApplication
             // I do not know the legality of a leap year birthdays for this project I am considering them to be of age on non leap years on March 1st
             CultureInfo.DefaultThreadCurrentCulture = new CultureInfo("en-US");
             DateTime date = DateTime.ParseExact(dob, "MMddyyyy", CultureInfo.InvariantCulture);
-            Console.WriteLine("dob" + date.AddYears(MinAgeRequirement) + ApplicationSubmissionDate);
+
             if (date.AddYears(MinAgeRequirement) <= ApplicationSubmissionDate)
             {
                 return true;
@@ -41,7 +41,7 @@ namespace HSAEnrollmentApplication
         {
             CultureInfo.DefaultThreadCurrentCulture = new CultureInfo("en-US");
             DateTime effectivDate = DateTime.ParseExact(dateToTakeEffect, "MMddyyyy", CultureInfo.InvariantCulture);
-            Console.WriteLine("effective" + ApplicationSubmissionDate.AddDays(EffectiveDateRange) + effectivDate);
+
             if (ApplicationSubmissionDate.AddDays(EffectiveDateRange) >= effectivDate)
             {
                 return true;

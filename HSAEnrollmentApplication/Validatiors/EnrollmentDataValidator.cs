@@ -20,20 +20,15 @@ namespace HSAEnrollmentApplication
 
         public bool IsValidDate(string date)
         {
-
             DateTime dateOutput;
             string format = "MMddyyyy";
-            Console.WriteLine("date", date, DateTime.TryParseExact(date, format, new CultureInfo("en-US"), DateTimeStyles.None, out dateOutput));
             return DateTime.TryParseExact(date, format, new CultureInfo("en-US"), DateTimeStyles.None, out dateOutput);
-   
         }
 
 
         public bool IsValidPlanType(string planType)
         {
-            Console.WriteLine("planType", planType, Enum.IsDefined(typeof(PlanType), planType));
             return Enum.IsDefined(typeof(PlanType), planType);
-
         }
     }
 }
