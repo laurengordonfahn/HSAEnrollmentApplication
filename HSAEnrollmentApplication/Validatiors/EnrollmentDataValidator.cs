@@ -11,10 +11,12 @@ namespace HSAEnrollmentApplication
             RuleFor(dataRow => dataRow.FirstName).NotEmpty();
             RuleFor(dataRow => dataRow.LastName).NotEmpty();
             RuleFor(dataRow => dataRow.DOB).NotEmpty()
+                .Matches(@"^[0-9]{8}$")
                 .Must(dob => IsValidDate(dob));
             RuleFor(dataRow => dataRow.PlanType).NotEmpty()
                 .IsEnumName(typeof(PlanType));
             RuleFor(dataRow => dataRow.EffectiveDate).NotEmpty()
+                .Matches(@"^[0-9]{8}$")
                 .Must(IsValidDate);
         }
 

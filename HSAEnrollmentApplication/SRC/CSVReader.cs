@@ -88,6 +88,7 @@ namespace HSAEnrollmentApplication
                 //validate
                 EnrollmentDataValidator validator = new EnrollmentDataValidator();
                 ValidationResult results = validator.Validate(enrollmentRow);
+                
                 if (!results.IsValid)
                 {
                     return new Response(false, "Data failed to validate" + JsonSerializer.Serialize(results.Errors));
