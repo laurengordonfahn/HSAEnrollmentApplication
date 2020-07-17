@@ -4,9 +4,19 @@ namespace HSAEnrollmentApplication
 {
     class Program
     {
+        
         static void Main(string[] args)
         {
-            Console.WriteLine("Hello World!");
+            EnrollmentInteractiveConsole consoleApp = new EnrollmentInteractiveConsole();
+        
+            consoleApp.EnrollmentStartInteractiveConsole();
+            
+            consoleApp.ReadCSV();
+
+            consoleApp.DisplayData();
+            
+
+            return;
         }
     }
 }
