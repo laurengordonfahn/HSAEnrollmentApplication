@@ -45,7 +45,6 @@ namespace HSAEnrollmentApplication
                         Response result = ValidateInitialDataRow(fields);
                         if (!result.Success)
                         {
-                            
                             reader.Close();
                             Table.Clear();
                             return new Response(false, "A record in the file failed validation. Processing has stopped.");
@@ -60,12 +59,11 @@ namespace HSAEnrollmentApplication
                     }
                     reader.Close();
                 }
-                return new Response(true, "Validation complete, program successfully wrote data to table in memory");
+                return new Response(true, "Validation complete, program successfully wrote data to a table in memory");
             }
             catch (System.IO.FileNotFoundException)
             {
-                Console.WriteLine("Your csv file path[" + CSVPath + "]was not found in the system. The program is going to exit please run the program again with a corrected file path.");
-                return new Response(false, "CSV was not found, exiting.");
+                return new Response(false, "Your csv file path [" + CSVPath + "] was not found in the system. The program is going to exit, please run the program again with a corrected file path.");
             }
             catch (Exception e)
             {
@@ -97,7 +95,7 @@ namespace HSAEnrollmentApplication
             }
             catch (Exception e)
             {
-                Console.WriteLine("Exception thrown trying to validation data row with " +
+                Console.WriteLine("Exception thrown trying to validate data row with " +
                    "Row [" + JsonSerializer.Serialize(fields) + "]" +
                    "CSVPath [" + CSVPath + "]" +
                    "Exception [" + e + "]" +

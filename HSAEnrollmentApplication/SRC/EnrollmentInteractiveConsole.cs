@@ -53,7 +53,7 @@ namespace HSAEnrollmentApplication
                         }
                         else
                         {
-                            Console.WriteLine("The date you entered is either not a valid date or not in the format mmddyyyy, please try again or simple press the return/enter key to use the default GMT");
+                            Console.WriteLine("The date you entered is either not a valid date or not in the format mmddyyyy, please try again or simply press the return/enter key to use the default GMT");
                             submittedDate = Console.ReadLine();
                         }
                     }
@@ -69,7 +69,7 @@ namespace HSAEnrollmentApplication
         /// </summary>
         public void ReadCSV()
         {
-            Console.WriteLine("The application is starting to retireve your csv file.");
+            Console.WriteLine("The application is starting to retrieve your csv file.");
 
             Response response = new CSVReader(CSVPath, Table, ProcessDate).ValidateCSVData();
     
