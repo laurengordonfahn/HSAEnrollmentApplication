@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 
 namespace HSAEnrollmentApplication
 {
@@ -10,16 +11,13 @@ namespace HSAEnrollmentApplication
         public string PlanType { get; set; }
         public string EffectiveDate { get; set; }
 
-        public EnrollmentDataModel CreateInstanceFromList(string [] dataRow )
+        public EnrollmentDataModel (List<string> dataRow )
         {
-            EnrollmentDataModel enrollment = new EnrollmentDataModel();
-            enrollment.FirstName = dataRow[0];
-            enrollment.LastName = dataRow[1];
-            enrollment.DOB = dataRow[2];
-            enrollment.PlanType = dataRow[3];
-            enrollment.EffectiveDate = dataRow[4];
-
-            return enrollment;
+            FirstName = dataRow[0];
+            LastName = dataRow[1];
+            DOB = dataRow[2];
+            PlanType = dataRow[3];
+            EffectiveDate = dataRow[4];
         }
     }
 }
