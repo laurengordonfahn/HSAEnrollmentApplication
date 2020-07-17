@@ -1,5 +1,4 @@
 # HSAEnrollmentApplication
-<<<<<<< HEAD
 Console application written in C# to serve as the intake mechanism for a flat comma delimited input file application to process enrollments.
 
 # About The Project
@@ -29,6 +28,5 @@ Navigate to the newly created project folder
 Run the project and build dependencies
 
 `dotnet run <path of project locally>.dll`
-=======
 Console application written in C# to serve as the intake mechanism for a flat comma delimited input file application to process enrollments
->>>>>>> Validation
+
