@@ -27,4 +27,4 @@ Navigate to the newly created project folder
 
 Run the project and build dependencies
 
-`dotnet run`
+`dotnet run <path of project locally>.dll`
