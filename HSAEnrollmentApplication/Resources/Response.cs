@@ -14,12 +14,5 @@ namespace HSAEnrollmentApplication
             Success = success;
             Message = message;
         }
-
-        public Response(bool success, string message, MemoryStream stream)
-        {
-            Success = success;
-            Message = message;
-            Stream = stream;
-        }
     }
 }
