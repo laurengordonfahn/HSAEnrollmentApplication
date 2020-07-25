@@ -12,7 +12,7 @@ namespace HSAEnrollmentApplication
         public string WelcomeMsg = "Welcome to the Enrollment Application interactive console.";
         public bool ShouldRequestProcessingDate = true;
         public string CSVPath;
-        public DateTime ProcessDate;
+        public DateTime ProcessDate = System.DateTime.UtcNow.Date;
         public DataTable Table = new ProcessedDataTable().AssessmentTable();
 
         /// <summary>
