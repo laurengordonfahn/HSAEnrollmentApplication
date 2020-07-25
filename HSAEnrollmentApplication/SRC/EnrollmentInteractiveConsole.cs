@@ -1,4 +1,5 @@
 ﻿using System;
+using FluentValidation.Results;
 using System.Data;
 using System.Globalization;
 using System.IO;
@@ -16,7 +17,7 @@ namespace HSAEnrollmentApplication
         public DataTable Table = new ProcessedDataTable().AssessmentTable();
 
         /// <summary>
-        /// Prompts user for csv path and a date to process csv data against. If not process date is submitted utc is used as default.
+        /// Prompts user for csv path and a date to process csv data against. If no process date is submitted utc is used as default.
         /// </summary
         public void EnrollmentStartInteractiveConsole()
         {
@@ -43,19 +44,30 @@ namespace HSAEnrollmentApplication
                     }
                     else
                     {
-                        DateTime dateOutput;
-                        string format = "MMddyyyy";
-
-                        if (DateTime.TryParseExact(submittedDate, format, new CultureInfo("en-US"), DateTimeStyles.None, out dateOutput))
+                        Response response = new DateStringValidator().ValidateDateStringInline(submittedDate, "MMddyyyy");
+                        if (response.Success)
                         {
-                            ProcessDate = dateOutput;
-                            isDateValid = true;
+                            ProcessDate = response.Date;
+                            isDateValid = response.Success;
                         }
                         else
                         {
-                            Console.WriteLine("The date you entered is either not a valid date or not in the format mmddyyyy, please try again or simply press the return/enter key to use the default GMT");
+                            Console.WriteLine(response.Message);
                             submittedDate = Console.ReadLine();
                         }
+                        //DateTime dateOutput;
+                        //string format = "MMddyyyy";
+
+                        //if (DateTime.TryParseExact(submittedDate, format, new CultureInfo("en-US"), DateTimeStyles.None, out dateOutput))
+                        //{
+                        //    ProcessDate = dateOutput;
+                        //    isDateValid = true;
+                        //}
+                        //else
+                        //{
+                        //    Console.WriteLine("The date you entered is either not a valid date or not in the format mmddyyyy, please try again or simply press the return/enter key to use the default GMT");
+                        //    submittedDate = Console.ReadLine();
+                        //}
                     }
 
                 }
