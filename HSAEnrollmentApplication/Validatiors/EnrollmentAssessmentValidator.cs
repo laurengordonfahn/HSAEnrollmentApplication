@@ -6,8 +6,8 @@ namespace HSAEnrollmentApplication
 {
     public class EnrollmentAssessmentValidator : AbstractValidator<EnrollmentDataModel>
     {
-        //ApplicationSubmissionDate: date given to compare submitted data against 
-        public DateTime ApplicationSubmissionDate;
+        //ProcessDate: date given to compare submitted data against 
+        public DateTime ProcessDate;
         // MinAgeRequirement: minimum age of applicant that is accepted
         public int MinAgeRequirement = 18;
         // EffectiveDateRange:  maxium number of days application effective date is valid
@@ -28,7 +28,7 @@ namespace HSAEnrollmentApplication
             CultureInfo.DefaultThreadCurrentCulture = new CultureInfo("en-US");
             DateTime date = DateTime.ParseExact(dob, "MMddyyyy", CultureInfo.InvariantCulture);
 
-            if (date.AddYears(MinAgeRequirement) <= ApplicationSubmissionDate)
+            if (date.AddYears(MinAgeRequirement) <= ProcessDate)
             {
                 return true;
             }
@@ -42,7 +42,7 @@ namespace HSAEnrollmentApplication
             CultureInfo.DefaultThreadCurrentCulture = new CultureInfo("en-US");
             DateTime effectivDate = DateTime.ParseExact(dateToTakeEffect, "MMddyyyy", CultureInfo.InvariantCulture);
 
-            if (ApplicationSubmissionDate.AddDays(EffectiveDateRange) >= effectivDate)
+            if (ProcessDate.AddDays(EffectiveDateRange) >= effectivDate)
             {
                 return true;
             }

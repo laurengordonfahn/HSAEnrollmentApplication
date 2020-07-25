@@ -13,15 +13,15 @@ namespace HSAEnrollmentApplication
     {
         public string CSVPath { get; set; }
         public DataTable Table;
-        //ApplicationSubmissionDate: date given to compare submitted data against 
-        public DateTime ApplicationSubmissionDate { get; set; }
+        //ProcessDate: date given to compare submitted data against 
+        public DateTime ProcessDate { get; set; }
         public DateTime TimeStamp = DateTime.UtcNow;
 
         public CSVReader(string csvPath, DataTable table, DateTime processDate)
         {
             CSVPath = csvPath;
             Table = table;
-            ApplicationSubmissionDate = processDate;
+            ProcessDate = processDate;
         }
 
         /// <summary>
@@ -115,7 +115,7 @@ namespace HSAEnrollmentApplication
                 EnrollmentDataModel enrollmentRow = new EnrollmentDataModel(fields);
                 //validate
                 EnrollmentAssessmentValidator validator = new EnrollmentAssessmentValidator();
-                validator.ApplicationSubmissionDate = ApplicationSubmissionDate;
+                validator.ProcessDate = ProcessDate;
                 ValidationResult results = validator.Validate(enrollmentRow);
                 if (!results.IsValid)
                 {
