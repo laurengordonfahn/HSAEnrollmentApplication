@@ -15,7 +15,6 @@ namespace HSAEnrollmentApplication
 
             consoleApp.DisplayData();
             
-
             return;
         }
     }
