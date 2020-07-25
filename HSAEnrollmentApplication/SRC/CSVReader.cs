@@ -9,12 +9,8 @@ using System.Globalization;
 
 namespace HSAEnrollmentApplication
 {
-    public class CSVReader
+    public class CSVReader : EnrollmentInteractiveConsole
     {
-        public string CSVPath { get; set; }
-        public DataTable Table;
-        //ProcessDate: date given to compare submitted data against 
-        public DateTime ProcessDate { get; set; }
         public DateTime TimeStamp = DateTime.UtcNow;
 
         public CSVReader(string csvPath, DataTable table, DateTime processDate)
