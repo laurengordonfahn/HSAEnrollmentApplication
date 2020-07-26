@@ -11,6 +11,7 @@ namespace HSAEnrollmentApplication
 {
     public class CSVReader : EnrollmentInteractiveConsole
     {
+
         public DateTime TimeStamp = DateTime.UtcNow;
 
         public CSVReader(string csvPath, DataTable table, DateTime processDate)
