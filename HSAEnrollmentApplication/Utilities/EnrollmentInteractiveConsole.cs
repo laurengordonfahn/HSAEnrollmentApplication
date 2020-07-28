@@ -5,7 +5,7 @@ using HSAEnrollmentApplication.Models;
 
 namespace HSAEnrollmentApplication
 {
-    public class EnrollmentInteractiveConsole
+    public class EnrollmentInteractiveConsole : IEnrollmentInteractiveConsole
     {
         public string WelcomeMsg = "Welcome to the Enrollment Application interactive console.";
         public bool ShouldRequestProcessingDate = true;
@@ -13,17 +13,24 @@ namespace HSAEnrollmentApplication
         public DateTime ProcessDate = System.DateTime.UtcNow.Date;
         public DataTable Table = new ProcessedDataTable().AssessmentTable();
 
+        ICSVReader _csvReader;
+
+        public EnrollmentInteractiveConsole(ICSVReader csvReader)
+        {
+            _csvReader = csvReader;
+        }
+
         /// <summary>
         /// Prompts user for csv path and a date to process csv data against. If not process date is submitted utc is used as default.
         /// </summary
         public void EnrollmentStartInteractiveConsole()
         {
             Console.WriteLine(WelcomeMsg);
-       
+
             GetCSVPath();
 
             GetProcessDate();
-           
+
             Console.WriteLine("Thank you for starting this program.");
         }
 
@@ -33,9 +40,9 @@ namespace HSAEnrollmentApplication
         public void ReadCSV()
         {
             Console.WriteLine("The application is starting to retrieve your csv file.");
+            _csvReader.AddParams(CSVPath, Table, ProcessDate);
+            Response response = _csvReader.ValidateCSVData();
 
-            Response response = new CSVReader(CSVPath, Table, ProcessDate).ValidateCSVData();
-    
 
             if (response.Success)
             {
@@ -56,20 +63,20 @@ namespace HSAEnrollmentApplication
             Console.WriteLine("Processed data displayed below:");
             foreach (DataRow dataRow in Table.Rows)
             {
-                for(int i = 0; i < Table.Columns.Count;  i++)
+                for (int i = 0; i < Table.Columns.Count; i++)
                 {
-                    if(i == 0)
+                    if (i == 0)
                     {
                         Console.Write(Enum.Parse(typeof(AssessmentStatus), (dataRow.ItemArray[i]).ToString()) + " ");
                     }
-                    else if(i == 4)
+                    else if (i == 4)
                     {
                         Console.Write(Enum.Parse(typeof(PlanType), (dataRow.ItemArray[i]).ToString()) + " ");
                     }
                     else
                     {
                         Console.Write(dataRow.ItemArray[i] + " ");
-                    }    
+                    }
                 }
                 Console.WriteLine();
             }
@@ -80,7 +87,7 @@ namespace HSAEnrollmentApplication
         /// <summary>
         /// Console Prompts for getting the csv path
         /// </summary>
-        public void GetCSVPath ()
+        public void GetCSVPath()
         {
             Console.WriteLine("Please, enter the local path of the csv file you would like processed.");
 
@@ -129,6 +136,6 @@ namespace HSAEnrollmentApplication
             }
             return;
         }
-    
+
     }
 }

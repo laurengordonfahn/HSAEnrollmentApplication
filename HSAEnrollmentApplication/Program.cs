@@ -1,4 +1,5 @@
 ﻿using System;
+using Autofac;
 
 namespace HSAEnrollmentApplication
 {
@@ -7,13 +8,22 @@ namespace HSAEnrollmentApplication
         
         static void Main(string[] args)
         {
-            EnrollmentInteractiveConsole consoleApp = new EnrollmentInteractiveConsole();
-        
-            consoleApp.EnrollmentStartInteractiveConsole();
-            
-            consoleApp.ReadCSV();
+            //All instnaces needed so top level control dependencies for application
+            var container = InstanceContainer.ConfigureContainer();
 
-            consoleApp.DisplayData();
+            using (var scope = container.BeginLifetimeScope())
+            {
+                var app = scope.Resolve<IApplication>();
+                app.RunApplication();
+            }
+
+            //EnrollmentInteractiveConsole consoleApp = new EnrollmentInteractiveConsole();
+        
+            //consoleApp.EnrollmentStartInteractiveConsole();
+            
+            //consoleApp.ReadCSV();
+
+            //consoleApp.DisplayData();
             
             return;
         }

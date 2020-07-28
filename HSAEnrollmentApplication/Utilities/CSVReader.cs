@@ -9,12 +9,15 @@ using System.Globalization;
 
 namespace HSAEnrollmentApplication
 {
-    public class CSVReader : EnrollmentInteractiveConsole
+    public class CSVReader : ICSVReader
     {
 
         public DateTime TimeStamp = DateTime.UtcNow;
+        public string CSVPath;
+        public DataTable Table;
+        public DateTime ProcessDate;
 
-        public CSVReader(string csvPath, DataTable table, DateTime processDate)
+        public void AddParams(string csvPath, DataTable table, DateTime processDate)
         {
             CSVPath = csvPath;
             Table = table;
@@ -26,7 +29,6 @@ namespace HSAEnrollmentApplication
         /// </summary
         public Response ValidateCSVData()
         {
-
             try
             {
                 using (StreamReader reader = new StreamReader(File.OpenRead(CSVPath)))
@@ -83,7 +85,7 @@ namespace HSAEnrollmentApplication
                 //validate
                 EnrollmentDataValidator validator = new EnrollmentDataValidator();
                 ValidationResult results = validator.Validate(enrollmentRow);
-                
+
                 if (!results.IsValid)
                 {
                     return new Response(false, "Data failed to validate" + JsonSerializer.Serialize(results.Errors));
