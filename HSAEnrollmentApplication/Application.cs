@@ -10,9 +10,9 @@ namespace HSAEnrollmentApplication
             _enrollmentInteractiveConsole = enrollmentInteractiveConsole;
         }
 
-        public void RunApplication()
+        public void RunApplication(string format)
         {
-            _enrollmentInteractiveConsole.EnrollmentStartInteractiveConsole();
+            _enrollmentInteractiveConsole.EnrollmentStartInteractiveConsole(format);
 
             _enrollmentInteractiveConsole.ReadCSV();
 

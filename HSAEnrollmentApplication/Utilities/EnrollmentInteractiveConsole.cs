@@ -12,24 +12,29 @@ namespace HSAEnrollmentApplication
         public string CSVPath;
         public DateTime ProcessDate = System.DateTime.UtcNow.Date;
         public DataTable Table = new ProcessedDataTable().AssessmentTable();
+        public string DateFormat;
 
         ICSVReader _csvReader;
 
         public EnrollmentInteractiveConsole(ICSVReader csvReader)
         {
             _csvReader = csvReader;
+
         }
 
         /// <summary>
         /// Prompts user for csv path and a date to process csv data against. If not process date is submitted utc is used as default.
         /// </summary
-        public void EnrollmentStartInteractiveConsole()
+        public void EnrollmentStartInteractiveConsole(string format)
         {
+            DateFormat = format;
             Console.WriteLine(WelcomeMsg);
 
             GetCSVPath();
-
+           
             GetProcessDate();
+            
+            
 
             Console.WriteLine("Thank you for starting this program.");
         }
@@ -118,9 +123,8 @@ namespace HSAEnrollmentApplication
                     else
                     {
                         DateTime dateOutput;
-                        string format = "MMddyyyy";
 
-                        if (DateTime.TryParseExact(submittedDate, format, new CultureInfo("en-US"), DateTimeStyles.None, out dateOutput))
+                        if (DateTime.TryParseExact(submittedDate, DateFormat, new CultureInfo("en-US"), DateTimeStyles.None, out dateOutput))
                         {
                             ProcessDate = dateOutput;
                             return;
