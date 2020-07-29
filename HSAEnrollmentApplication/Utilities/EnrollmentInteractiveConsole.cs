@@ -107,7 +107,7 @@ namespace HSAEnrollmentApplication
         {
             if (ShouldRequestProcessingDate)
             {
-                Console.WriteLine("At this time you may enter the date on which you would like this enrollment data to be processed against in mmddyyyy format " +
+                Console.WriteLine("At this time you may enter the date on which you would like this enrollment data to be processed against in " + DateFormat+ " format " +
                     "OR" +
                     "you can press return and UTC aka GMT will be used.");
 
@@ -131,7 +131,7 @@ namespace HSAEnrollmentApplication
                         }
                         else
                         {
-                            Console.WriteLine("The date you entered is either not a valid date or not in the format mmddyyyy, please try again or simply press the return/enter key to use the default GMT");
+                            Console.WriteLine("The date you entered is either not a valid date or not in the format" + DateFormat +", please try again or simply press the return/enter key to use the default GMT");
                             submittedDate = Console.ReadLine();
                         }
                     }
