@@ -1,5 +1,6 @@
 ﻿using System;
 using Autofac;
+using HSAEnrollmentApplication.Utilities;
 
 namespace HSAEnrollmentApplication
 {
@@ -14,8 +15,9 @@ namespace HSAEnrollmentApplication
             string format = args.Length == 1 ? args[0] : "MMddyyyy";
             using (var scope = container.BeginLifetimeScope())
             {
-                var app = scope.Resolve<IApplication>();
-                app.RunApplication(format);
+                //var app = scope.Resolve<IApplication>();
+                var app = scope.Resolve<IEnrollmentCSVProgram>();
+                app.EnrollmentConsoleProgram(format);
             }
             
             return;

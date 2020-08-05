@@ -8,16 +8,9 @@ using System.Globalization;
 
 namespace HSAEnrollmentApplication.Utilities
 {
-    public class EnrollmentCSV
+    public class EnrollmentCSV : ICSVType
     {
         public DateTime TimeStamp = DateTime.UtcNow;
-        public string CSVPath;
-        public DataTable Table;
-        public DateTime ProcessDate;
-
-        public EnrollmentCSV()
-        {
-        }
 
         /// <summary>
         /// Does intial data validation
@@ -41,7 +34,6 @@ namespace HSAEnrollmentApplication.Utilities
             {
                 Console.WriteLine("Exception thrown trying to validate data row with " +
                    "Row [" + JsonSerializer.Serialize(fields) + "]" +
-                   "CSVPath [" + CSVPath + "]" +
                    "Exception [" + e + "]" +
                    "at [" + TimeStamp + "]");
                 throw;
@@ -52,14 +44,14 @@ namespace HSAEnrollmentApplication.Utilities
         /// <summary>
         /// Accesses valid data for Enrollment status acceptablity
         /// </summary
-        public List<string> ValidateCriteria(List<string> fields)
+        public List<string> ValidateCriteria(List<string> fields, DateTime processDate)
         {
             try
             {
                 EnrollmentDataModel enrollmentRow = new EnrollmentDataModel(fields);
                 //validate
                 EnrollmentAssessmentValidator validator = new EnrollmentAssessmentValidator();
-                validator.ProcessDate = ProcessDate;
+                validator.ProcessDate = processDate;
                 ValidationResult results = validator.Validate(enrollmentRow);
                 if (!results.IsValid)
                 {
@@ -75,7 +67,6 @@ namespace HSAEnrollmentApplication.Utilities
             {
                 Console.WriteLine("Exception thrown trying to assess data row with " +
                    "Row [" + JsonSerializer.Serialize(fields) + "]" +
-                   "CSVPath [" + CSVPath + "]" +
                    "Exception [" + e + "]" +
                    "at [" + TimeStamp + "]");
                 throw;
@@ -86,7 +77,7 @@ namespace HSAEnrollmentApplication.Utilities
         /// <summary>
         /// Writes a row of data to the data table in memory
         /// </summary
-        public void WriteToDataTable(List<string> fields)
+        public void WriteToDataTable(DataTable table, List<string> fields)
         {
             try
             {
@@ -99,14 +90,13 @@ namespace HSAEnrollmentApplication.Utilities
                 AssessmentStatus status = (AssessmentStatus)Enum.Parse(typeof(AssessmentStatus), fields[5]);
                 PlanType plan = (PlanType)Enum.Parse(typeof(PlanType), fields[3]);
 
-                Table.Rows.Add(status, fields[0], fields[1], shortDOB, plan, shortEffectiveDate);
-                Table.AcceptChanges();
+                table.Rows.Add(status, fields[0], fields[1], shortDOB, plan, shortEffectiveDate);
+                table.AcceptChanges();
             }
             catch (Exception e)
             {
                 Console.WriteLine("Exception thrown trying to write data row to table with " +
                    "Row [" + JsonSerializer.Serialize(fields) + "]" +
-                   "CSVPath [" + CSVPath + "]" +
                    "Exception [" + e + "]" +
                    "at [" + TimeStamp + "]");
                 throw;

@@ -5,9 +5,6 @@ namespace HSAEnrollmentApplication.Utilities
 {
     public class ConsoleCSVProcessor : IConsoleCSVProcessor
     {
-        public string WelcomeMsg = "Welcome to the Enrollment Application interactive console.";
-        public bool ShouldRequestProcessingDate = true;
-        public string CSVPath;
         public DateTime ProcessDate = System.DateTime.UtcNow.Date;
         public string DateFormat;
 
@@ -18,10 +15,10 @@ namespace HSAEnrollmentApplication.Utilities
         /// <summary>
         /// Welcome message for program
         /// </summary
-        public void WelcomeMessage(string format)
+        public void WelcomeMessage(string welcomeMsg)
         {
 
-            Console.WriteLine(WelcomeMsg);
+            Console.WriteLine(welcomeMsg);
 
             return;
         }
@@ -29,20 +26,20 @@ namespace HSAEnrollmentApplication.Utilities
         /// <summary>
         /// Console Prompts for getting the csv path
         /// </summary>
-        public void GetCSVPath()
+        public string GetCSVPath()
         {
             Console.WriteLine("Please, enter the local path of the csv file you would like processed.");
 
-            CSVPath = Console.ReadLine();
-            return;
+            string csvPath = Console.ReadLine();
+            return csvPath;
         }
 
         /// <summary>
         /// Console prompts and processing of a date to process the csv data file against.
         /// </summary>
-        public void GetProcessDate()
+        public DateTime GetProcessDate(bool shouldRequestProcessingDate)
         {
-            if (ShouldRequestProcessingDate)
+            if (shouldRequestProcessingDate)
             {
                 Console.WriteLine("At this time you may enter the date on which you would like this enrollment data to be processed against in " + DateFormat + " format " +
                     "OR" +
@@ -55,7 +52,7 @@ namespace HSAEnrollmentApplication.Utilities
                 {
                     if (String.IsNullOrEmpty(submittedDate))
                     {
-                        return;
+                        return ProcessDate;
                     }
                     else
                     {
@@ -63,8 +60,8 @@ namespace HSAEnrollmentApplication.Utilities
 
                         if (DateTime.TryParseExact(submittedDate, DateFormat, new CultureInfo("en-US"), DateTimeStyles.None, out dateOutput))
                         {
-                            ProcessDate = dateOutput;
-                            return;
+                            DateTime processDate = dateOutput;
+                            return processDate;
                         }
                         else
                         {
@@ -75,7 +72,7 @@ namespace HSAEnrollmentApplication.Utilities
 
                 }
             }
-            return;
+            return ProcessDate;
         }
     }
 }

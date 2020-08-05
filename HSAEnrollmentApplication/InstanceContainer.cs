@@ -1,5 +1,6 @@
 ﻿using System;
 using Autofac;
+using HSAEnrollmentApplication.Utilities;
 
 namespace HSAEnrollmentApplication
 {
@@ -8,10 +9,13 @@ namespace HSAEnrollmentApplication
         public static IContainer ConfigureContainer()
         {
             var builder = new ContainerBuilder();
-
-            builder.RegisterType<Application>().As<IApplication>();
-            builder.RegisterType<EnrollmentInteractiveConsole>().As<IEnrollmentInteractiveConsole>();
-            builder.RegisterType<CSVReader>().As<ICSVReader>();
+            builder.RegisterType<EnrollmentCSVProgram>().As<IEnrollmentCSVProgram>();
+            builder.RegisterType<EnrollmentCSV>().As<ICSVType>();
+            builder.RegisterType<ReadCSVToDataTable>().UsingConstructor(typeof(ICSVType));
+            builder.RegisterType<ReadCSVToDataTable>().As<IReadCSV>();
+            //builder.RegisterType<Application>().As<IApplication>();
+            //builder.RegisterType<EnrollmentInteractiveConsole>().As<IEnrollmentInteractiveConsole>();
+            //builder.RegisterType<CSVReader>().As<ICSVReader>();
 
             return builder.Build();
         }

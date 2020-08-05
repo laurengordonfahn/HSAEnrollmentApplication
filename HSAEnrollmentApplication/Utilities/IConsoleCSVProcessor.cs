@@ -1,9 +1,12 @@
-﻿namespace HSAEnrollmentApplication.Utilities
+﻿using System;
+
+namespace HSAEnrollmentApplication.Utilities
 {
     public interface IConsoleCSVProcessor
     {
-        void GetCSVPath();
-        void GetProcessDate();
-        void WelcomeMessage(string format);
+        void WelcomeMessage(string welcomeMsg);
+        string GetCSVPath();
+        DateTime GetProcessDate(bool shouldRequestProcessingDate);
+        
     }
 }
