@@ -10,9 +10,12 @@ namespace HSAEnrollmentApplication
         {
             var builder = new ContainerBuilder();
             builder.RegisterType<EnrollmentCSVProgram>().As<IEnrollmentCSVProgram>();
-            builder.RegisterType<EnrollmentCSV>().As<ICSVType>();
-            builder.RegisterType<ReadCSVToDataTable>().UsingConstructor(typeof(ICSVType));
-            builder.RegisterType<ReadCSVToDataTable>().As<IReadCSV>();
+            
+            var enrollmentType = new EnrollmentCSV();
+            //builder.RegisterInstance(enrollmentType).As<ICSVType>();
+            builder.Register(c => new ReadCSVToDataTable(enrollmentType)).As<IReadCSV>();
+            //builder.RegisterType<ReadCSVToDataTable>().UsingConstructor(typeof(ICSVType)).As<IReadCSV>();
+
             //builder.RegisterType<Application>().As<IApplication>();
             //builder.RegisterType<EnrollmentInteractiveConsole>().As<IEnrollmentInteractiveConsole>();
             //builder.RegisterType<CSVReader>().As<ICSVReader>();

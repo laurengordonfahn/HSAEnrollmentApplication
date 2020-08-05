@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Data;
-using System.Globalization;
 using HSAEnrollmentApplication.Models;
 
 namespace HSAEnrollmentApplication.Utilities
@@ -42,6 +41,7 @@ namespace HSAEnrollmentApplication.Utilities
             if (response.Success)
             {
                 Console.WriteLine(response.Message);
+                DisplayData();
             }
             else
             {
