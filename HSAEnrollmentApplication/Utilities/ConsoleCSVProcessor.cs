@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Globalization;
+
 namespace HSAEnrollmentApplication.Utilities
 {
     public class ConsoleCSVProcessor
