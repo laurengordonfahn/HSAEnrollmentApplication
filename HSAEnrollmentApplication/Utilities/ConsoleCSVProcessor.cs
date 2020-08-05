@@ -3,7 +3,7 @@ using System.Globalization;
 
 namespace HSAEnrollmentApplication.Utilities
 {
-    public class ConsoleCSVProcessor
+    public class ConsoleCSVProcessor : IConsoleCSVProcessor
     {
         public string WelcomeMsg = "Welcome to the Enrollment Application interactive console.";
         public bool ShouldRequestProcessingDate = true;
@@ -20,7 +20,7 @@ namespace HSAEnrollmentApplication.Utilities
         /// </summary
         public void WelcomeMessage(string format)
         {
-  
+
             Console.WriteLine(WelcomeMsg);
 
             return;
