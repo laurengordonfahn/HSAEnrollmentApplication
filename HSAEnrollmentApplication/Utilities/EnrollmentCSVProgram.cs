@@ -33,7 +33,7 @@ namespace HSAEnrollmentApplication.Utilities
             //Interactive Console
             _consoleCSVProcessor.WelcomeMessage(WelcomeMsg);
             CSVPath = _consoleCSVProcessor.GetCSVPath();
-            ProcessDate = _consoleCSVProcessor.GetProcessDate(ShouldRequestProcessingDate);
+            ProcessDate = _consoleCSVProcessor.GetProcessDate(ShouldRequestProcessingDate, DateFormat);
 
             //Process Enrollment CSV Data
             Response response = _readCSV.ProcessDataByRow(CSVPath, ProcessDate, Table);

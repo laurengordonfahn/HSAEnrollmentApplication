@@ -6,7 +6,7 @@ namespace HSAEnrollmentApplication.Utilities
     {
         void WelcomeMessage(string welcomeMsg);
         string GetCSVPath();
-        DateTime GetProcessDate(bool shouldRequestProcessingDate);
+        DateTime GetProcessDate(bool shouldRequestProcessingDate, string format);
         
     }
 }
