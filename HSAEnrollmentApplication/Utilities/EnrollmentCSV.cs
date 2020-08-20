@@ -14,7 +14,7 @@ namespace HSAEnrollmentApplication.Utilities
 
         /// <summary>
         /// Does intial data validation
-        /// </summary
+        /// </summary>
         public Response ValidateInitialDataRow(List<string> fields)
         {
             try

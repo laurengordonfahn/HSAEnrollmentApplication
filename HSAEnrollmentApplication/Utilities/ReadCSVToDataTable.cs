@@ -20,7 +20,7 @@ namespace HSAEnrollmentApplication.Utilities
 
         /// <summary>
         /// Processes any type of CSVType by row into a DataTable
-        /// </summary
+        /// </summary>
         public Response ProcessDataByRow(string csvPath, DateTime processDate, DataTable table)
         {
             try

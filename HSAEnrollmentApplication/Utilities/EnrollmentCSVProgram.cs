@@ -24,7 +24,7 @@ namespace HSAEnrollmentApplication.Utilities
 
         /// <summary>
         /// Runs the flow for the entire HSA Enrollment Console Program
-        /// </summary
+        /// </summary>
         public void EnrollmentConsoleProgram(string format)
         {
             //From Console Arguements

@@ -13,7 +13,7 @@ namespace HSAEnrollmentApplication.Utilities
 
         /// <summary>
         /// Welcome message for program
-        /// </summary
+        /// </summary>
         public void WelcomeMessage(string welcomeMsg)
         {
 
